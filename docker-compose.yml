@@ -1,0 +1,55 @@
+version: '3.'
+
+services:
+  db:
+    image: postgres:14.5
+    ports:
+      - "15432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-postgres}
+      - DB_HOST=db
+      - DB_PORT=5432
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-postgres}", "-d", "${POSTGRES_DB:-postgres}"]
+      start_period: 2s
+      interval: 5s
+      timeout: 1s
+      retries: 5
+    networks:
+      - backend
+
+  migrations:
+    build:
+      context: flyway
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-postgres}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=${POSTGRES_DB:-postgres}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+    networks:
+      - backend
+
+  dummy_data_loader:
+    image: postgres:14.5
+    volumes:
+      - ./local:/local
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-postgres}
+    command: >
+      bash -c "psql $$DATABASE_URL < /local/dummy_data.sql"
+    networks:
+      - backend
+
+
+networks:
+  backend:
+
