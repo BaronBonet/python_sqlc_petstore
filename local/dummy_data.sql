@@ -1,8 +1,8 @@
-INSERT INTO owners (name, email, phone_number)
+INSERT INTO owners (name, email)
 VALUES 
-    ('John Doe', 'john@example.com', '123-456-7890'),
-    ('Jane Smith', 'jane@example.com', '987-654-3210'),
-    ('Alice Johnson', 'alice@example.com', '555-123-4567');
+    ('John Doe', 'john@example.com'),
+    ('Jane Smith', 'jane@example.com'),
+    ('Alice Johnson', 'alice@example.com');
 
 INSERT INTO pets (name, species, breed, age, owner_id)
 VALUES 

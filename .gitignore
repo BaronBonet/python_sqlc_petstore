@@ -1,1 +1,3 @@
 generated/
+generated_*/
+__pycache__/

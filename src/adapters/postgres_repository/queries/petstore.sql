@@ -1,8 +1,8 @@
--- name: GetPetsName :many
-
+-- name: GetPet :one
 SELECT
-  Name
+  *
 FROM
-    pets
+  pets
+WHERE id = sqlc.arg('pet_id')::int
 ;
 
