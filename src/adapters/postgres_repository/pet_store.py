@@ -1,6 +1,7 @@
 from typing import Optional
 
-import sqlalchemy
+from sqlalchemy import Engine
+
 
 from adapters.postgres_repository.generated_queries.petstore import Querier
 from adapters.postgres_repository.transformers import pet_to_domain_pet
@@ -8,7 +9,7 @@ from core import domain, ports
 
 
 class PostgresPetStoreRepo(ports.PetStoreRepo):
-    def __init__(self, db_engine: sqlalchemy.Engine):
+    def __init__(self, db_engine: Engine):
         self.db_engine = db_engine
 
     def __enter__(self):

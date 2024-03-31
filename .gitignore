@@ -1,3 +1,5 @@
 generated/
 generated_*/
 __pycache__/
+pytest_cache/
+.venv/

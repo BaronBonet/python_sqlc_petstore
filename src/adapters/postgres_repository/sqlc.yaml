@@ -12,5 +12,5 @@ sql:
       - out: ./../../../src/adapters/postgres_repository/generated_queries
         plugin: py
         options:
-          package: src.adapters.postgres_repository.generated_queries
+          package: adapters.postgres_repository.generated_queries
           emit_sync_querier: true

@@ -9,7 +9,12 @@ readme = "README.md"
 python = "^3.10"
 sqlalchemy = "^2.0.29"
 psycopg2 = "^2.9.9"
+urllib3 = "^2.2.1"
 
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
+testcontainers = "^4.2.0"
 
 [build-system]
 requires = ["poetry-core"]

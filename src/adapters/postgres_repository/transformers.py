@@ -1,5 +1,5 @@
 from core import domain
-from src.adapters.postgres_repository.generated_queries import models
+from adapters.postgres_repository.generated_queries import models
 
 
 def pet_to_domain_pet(pet: models.Pet) -> domain.Pet:
