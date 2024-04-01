@@ -20,12 +20,33 @@ def create_init_script(migrations_dir: pathlib.Path = MIGRATIONS_DIR) -> str:
 def db_engine():
     with PostgresContainer("postgres:15.6") as postgres:
         connection_url = postgres.get_connection_url()
-        print(connection_url)
         engine = create_engine(connection_url)
 
         run_migrations(engine)
 
         yield engine
+
+
+@pytest.fixture(scope="function", autouse=True)
+def cleanup_db(db_engine: Engine):
+    yield
+
+    with db_engine.begin() as connection:
+        # Disable foreign key checks
+        connection.execute(text("SET session_replication_role = 'replica'"))
+
+        # Get the list of tables in the database
+        result = connection.execute(
+            text("SELECT tablename FROM pg_tables WHERE schemaname = 'public'")
+        )
+        tables = [row[0] for row in result]
+
+        # Truncate all the tables
+        for table in tables:
+            connection.execute(text(f"TRUNCATE TABLE {table} CASCADE"))
+
+        # Enable foreign key checks again
+        connection.execute(text("SET session_replication_role = 'origin'"))
 
 
 def run_migrations(db_engine: Engine):
